@@ -1,3 +1,3 @@
 ### DigiFit
 
-The goal of this is to create an desktop/mobile app and a web application that makes getting into shape easier than ever before.
+The purpose of DigiFit is to replace the need of personal trainers. The DigiFit app will give you feedback based on your workouts,measurements and caloric intake to help you reach your goals, wether it be weight gain, weight reduction, strength/hyertrofi gains.
