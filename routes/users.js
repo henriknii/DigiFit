@@ -14,8 +14,8 @@ router.get('/', async (req,res) =>{
 })
 
 //Get a specific user
-router.get('/:id',(req,res) =>{
-    
+router.get('/:email',getUser,(req,res) =>{
+    res.json(res.user);
 })
 
 //Creating user
@@ -60,14 +60,36 @@ router.post('/register', async (req,res) =>{
 })
 
 // Updating a user
-router.patch('/:id',(req,res) =>{
+router.patch('/:email',(req,res) =>{
     
 })
 
 //Delete a user
-router.delete('/:id',(req,res) =>{
+router.delete('/:email',getUser , async (req, res) =>{
+  
+    try{
+        await res.user.remove()
+
+        res.json({message: "User has been succesfully deleted"})
+    }
+    catch ( err ){
+        res.status(500).json({message: err.message});
+    }
 })
     
-
+async function getUser(req, res, next){
+    let user;
+    try{
+        user = await User.findOne({ email:req.params.email });
+        if( user == null ){
+            return res.status(404).json({message: 'Cannot find user'})
+        }
+    }
+    catch ( err ){
+        return res.status(500).json({message: error.message});
+    }
+    res.user = user
+    next();
+}
 
 module.exports = router;
