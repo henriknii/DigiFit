@@ -28,12 +28,31 @@ router.post('/register', async (req,res) =>{
         weight: req.body.weight,
         email: req.body.email,
         password: req.body.password,
+        repeat_password: req.body.repeat_password
 
     })
-    
+
     try{
-        const newUser = await user.save()
-        res.status(201).json(newUser);
+        // Running the validate function on the userSchema
+        let validUser = user.joiValidate(user);
+        
+        // Keeping track of the error from validation
+        let error = validUser?.error?.details[0];
+
+        // Cheeky hack to overwrite the ref method in joi as custom messages are not supported on .ref
+        if(error?.context?.key === 'repeat_password'){error.message ="Passwords does not match"}
+
+        //If error exists return the error
+        if( error ){
+
+              res.status(403).json({message: error.message})
+        }
+
+        else {
+            //else save the user to the database
+            const newUser = await user.save()
+            res.status(201).json(newUser);
+        }
     }
     catch (err) {
         res.status(400).json({ message: err.message })
@@ -45,7 +64,7 @@ router.patch('/:id',(req,res) =>{
     
 })
 
-//Delete a userg
+//Delete a user
 router.delete('/:id',(req,res) =>{
 })
     
