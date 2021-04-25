@@ -47,6 +47,7 @@ router.patch('/:id',(req,res) =>{
 
 //Delete a userg
 router.delete('/:id',(req,res) =>{
+})
     
 
 
