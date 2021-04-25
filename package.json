@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "devStart":"nodemon server.js"
+    "devStart": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mongoosejs/double": "^0.2.0",
+    "bcrypt": "^5.0.1",
     "express": "^4.17.1",
+    "joi": "^17.4.0",
     "mongoose": "^5.12.3"
   },
   "devDependencies": {
