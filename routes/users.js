@@ -45,9 +45,9 @@ router.patch('/:id',(req,res) =>{
     
 })
 
-//Delete a user
+//Delete a userg
 router.delete('/:id',(req,res) =>{
     
-})
+
 
 module.exports = router;
