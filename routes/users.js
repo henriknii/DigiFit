@@ -28,7 +28,6 @@ router.post('/register', async (req,res) =>{
         weight: req.body.weight,
         email: req.body.email,
         password: req.body.password,
-        repeat_password: req.body.repeat_password
 
     })
 
@@ -38,9 +37,6 @@ router.post('/register', async (req,res) =>{
         
         // Keeping track of the error from validation
         let error = validUser?.error?.details[0];
-
-        // Cheeky hack to overwrite the ref method in joi as custom messages are not supported on .ref
-        if(error?.context?.key === 'repeat_password'){error.message ="Passwords does not match"}
 
         //If error exists return the error
         if( error ){
@@ -60,15 +56,30 @@ router.post('/register', async (req,res) =>{
 })
 
 // Updating a user
-router.patch('/:email',(req,res) =>{
-    
+router.patch('/:email',getUser, async (req,res) =>{
+   if(req.body.name !== null){ res.user.name = req.body.name}
+   if(req.body.age !== null){ res.user.age = req.body.age}
+   if(req.body.height !== null){ res.user.height = req.body.height}
+   if(req.body.weight !== null){ res.user.weight = req.body.weight}
+   if(req.body.email !== null){ res.user.email = req.body.email}
+   if(req.body.password !== null){ res.user.password = req.body.password}
+
+   try{
+       const updatedUser = await res.user.save();
+       res.json({message: "Update was succsessfull"});
+   }
+
+   catch ( err ){
+       res.status(500).json({message : err.message});
+   }
+   
 })
 
 //Delete a user
 router.delete('/:email',getUser , async (req, res) =>{
   
     try{
-        await res.user.remove()
+        await res.user.deleteOne()
 
         res.json({message: "User has been succesfully deleted"})
     }

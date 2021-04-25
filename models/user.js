@@ -19,13 +19,12 @@ const userSchema = new mongoose.Schema({
     },
     email:{
         type: String,
+        unique: true,
     },
     password:{
         type: String,
     },
-    repeat_password:{
-        type: String
-    },
+
     created: {
         type: Date,
         default: Date.now
@@ -86,7 +85,6 @@ userSchema.methods.joiValidate =  function(obj) {
                     'string.min': `Password cannot be shorter than {#limit} characters`,
                     'string.pattern.base':`Please make sure that the password contains atleast 8 characters, one uppercase and one lowecase letter and one number`,
                 }),
-        repeat_password: Joi.ref('password'),
         created: Joi.date()
     })
 
