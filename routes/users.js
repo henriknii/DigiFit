@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user.js');
+const bcrypt = require('bcrypt');
 
 //Getting all users
 router.get('/', async (req,res) =>{
@@ -20,17 +21,7 @@ router.get('/:email',getUser,(req,res) =>{
 
 //Creating user
 router.post('/register', async (req,res) =>{
-    const user = new User({
-
-        name : req.body.name,
-        age: req.body.age,
-        height: req.body.height,
-        weight: req.body.weight,
-        email: req.body.email,
-        password: req.body.password,
-
-    })
-
+    let user = new User(req.body);
     try{
         // Running the validate function on the userSchema
         let validUser = user.joiValidate(user);
@@ -46,6 +37,12 @@ router.post('/register', async (req,res) =>{
 
         else {
             //else save the user to the database
+                const salt = await bcrypt.genSalt();
+                //hashing password
+                hashedPassword = await bcrypt.hash(req.body.password,salt);
+                user.password = hashedPassword;
+            
+            
             const newUser = await user.save()
             res.status(201).json(newUser);
         }
@@ -88,6 +85,7 @@ router.delete('/:email',getUser , async (req, res) =>{
     }
 })
     
+// Getting user.
 async function getUser(req, res, next){
     let user;
     try{

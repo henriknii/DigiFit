@@ -32,13 +32,12 @@ const userSchema = new mongoose.Schema({
 
 })
 
-
+// validation scheme for registering a user
 userSchema.methods.joiValidate =  function(obj) {
 
     const Joi = require('joi')
 
     const schema = Joi.object({
-        _id : Joi.object(),
         name : Joi.string()
                .max(60)
                .required()
@@ -91,29 +90,23 @@ userSchema.methods.joiValidate =  function(obj) {
       return schema.validate(obj._doc)
 }
 
-userSchema.pre('save',async function(next){
+// Encrypts password before saving user to database
 
+//password validation
+userSchema.methods.validatePassword = async function (obj){
     user = this;
- 
-    //Checks if the password is new or has been modified.
-    if( !user.isModified('password')) return next();
+    console.log(user.password);
+    try {
+        if(await bcrypt.compare(obj.password, user.password)){
+            return true
+        }
+        return false;
+    }
+    catch{
+        return "Something went wrong"
+    }
 
-    //Generating salt then 
-    bcrypt.genSalt(function( err,salt ){
-        //Returning error if generating salt failed.
-        if( err ) return next( err );
-
-        //Hashing the password if generating the salt succeeded.
-        bcrypt.hash(user.password,salt,function( err,hashedPassword ) {
-            //Returning the error if the hashing fais.
-            if( err ) return next( err )
-            
-            //Replaces the cleartext password with the hashed one
-            user.password = hashedPassword;
-        })
-
-    })
-
-})
+    
+}
 
 module.exports = mongoose.model('User',userSchema);
