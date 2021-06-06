@@ -36,8 +36,10 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.joiValidate =  function(obj) {
 
     const Joi = require('joi')
+    
 
     const schema = Joi.object({
+        _id : Joi.object(),
         name : Joi.string()
                .max(60)
                .required()

@@ -15,9 +15,9 @@ db.once('open', () => console.log("Connected to Database"));
 app.use(express.json())
 
 const userRouter = require('./routes/users')
-const auth = require('./routes/auth')
+const loginRoute = require('./routes/login')
 
 app.use('/user',userRouter);
-app.use('/',auth);
+app.use('/',loginRoute);
 
-app.listen(3000,() => console.log("Server started"));
+app.listen(5000,() => console.log("Server started"));

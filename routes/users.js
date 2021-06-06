@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user.js');
 const bcrypt = require('bcrypt');
+const authenticate = require('../Middleware/auth')
 
-//Getting all users
 router.get('/', async (req,res) =>{
     try {
         const user = await User.find();
@@ -15,8 +15,8 @@ router.get('/', async (req,res) =>{
 })
 
 //Get a specific user
-router.get('/:email',getUser,(req,res) =>{
-    res.json(res.user);
+router.get('/me',authenticate,async  (req,res) =>{
+
 })
 
 //Creating user
